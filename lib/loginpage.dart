@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart'; // Import TapGestureRecognizer
-import 'package:schoolapp/signuppage.dart'; // Import the Signup Page
-import 'package:schoolapp/welcomescreen.dart'; // Import the Welcome Page
+import 'package:flutter/gestures.dart';
+import 'package:schoolapp/signuppage.dart';
+import 'package:schoolapp/welcomescreen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,7 +20,6 @@ class _LoginPageState extends State<LoginPage> {
     String password = passwordController.text.trim();
 
     if (email.isNotEmpty && password.isNotEmpty) {
-      // ✅ Navigate to Welcome Page if fields are filled
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const WelcomeScreen()),
@@ -94,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                 ),
-                onPressed: _handleLogin, // ✅ Calls the login function
+                onPressed: _handleLogin,
                 child: const Text("Login",
                     style: TextStyle(color: Colors.white, fontSize: 18)),
               ),

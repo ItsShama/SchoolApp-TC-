@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart'; // Import TapGestureRecognizer
-import 'package:schoolapp/loginpage.dart'; // Import the Login Page
+import 'package:flutter/gestures.dart';
+import 'package:schoolapp/loginpage.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -113,8 +113,7 @@ class _SignupPageState extends State<SignupPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    const LoginPage()), // ✅ Navigates to LoginPage
+                                builder: (context) => const LoginPage()),
                           );
                         },
                     ),
