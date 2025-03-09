@@ -4,7 +4,7 @@ import 'package:schoolapp/schooldetailpage.dart';
 class ChooseBoardPage extends StatelessWidget {
   final Map<String, List<String>> boardSchools = {
     "SSC Board": [
-      "St. Xavier's High School, Mumbai",
+      "St. Xavier's High School, Mumbai dcmmnmdkkkkkkkkkkkkk",
       "Don Bosco High School, Matunga",
       "Smt. Sulochanadevi Singhania School, Thane",
       "Bombay Scottish School, Mahim",
@@ -37,6 +37,9 @@ class ChooseBoardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    int crossAxisCount = (screenWidth ~/ 150).clamp(2, 4);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple,
@@ -62,52 +65,56 @@ class ChooseBoardPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    entry.key, // Board Name
+                    entry.key,
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3, // 3 schools per row
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8,
-                      childAspectRatio: 2, // Adjust box size
-                    ),
-                    itemCount: entry.value.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SchoolDetailPage(
-                                schoolName: entry.value[index],
+                  LayoutBuilder(builder: (context, constraints) {
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 8,
+                        mainAxisExtent: screenWidth < 600 ? 100 : 200,
+                      ),
+                      itemCount: entry.value.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SchoolDetailPage(
+                                  schoolName: entry.value[index],
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.pink[50],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Text(
+                                  entry.value[index],
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
                               ),
                             ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.pink[50],
-                            borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Center(
-                            child: Text(
-                              entry.value[index], // School Name
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                        );
+                      },
+                    );
+                  }),
                   const SizedBox(height: 20),
                 ],
               );

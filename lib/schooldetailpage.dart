@@ -27,6 +27,8 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple,
@@ -52,7 +54,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15)),
                   child: Container(
-                    height: 250,
+                    height: screenWidth < 400 ? 180 : 250,
                     width: double.infinity,
                     color: Colors.grey[300],
                     alignment: Alignment.center,
@@ -66,68 +68,105 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
 
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.schoolName,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Flexible(
+                          // Allows text to wrap inside Row
+                          child: Text(
+                            widget.schoolName,
+                            style: TextStyle(
+                              fontSize: screenWidth < 400 ? 12 : 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            softWrap: true, // Enable text wrapping
+                            overflow:
+                                TextOverflow.visible, // Ensures full visibility
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    children: [
-                      Row(
-                        children: const [
-                          Icon(Icons.location_on, color: Colors.black),
-                          Text(" Kalkaji, Delhi",
-                              style: TextStyle(
-                                  fontSize: 16,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                color: Colors.black,
+                                size: screenWidth < 400 ? 18 : 24,
+                              ),
+                              Text(
+                                " Kalkaji, Delhi",
+                                style: TextStyle(
+                                  fontSize: screenWidth < 400 ? 12 : 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.blue)),
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            height: 20,
+                            width: 1,
+                            color: Colors.black,
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                                size: screenWidth < 400 ? 18 : 24,
+                              ),
+                              Text(
+                                " 4.2/5 Reviews",
+                                style: TextStyle(
+                                  fontSize: screenWidth < 400 ? 12 : 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            height: 20,
+                            width: 1,
+                            color: Colors.black,
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.comment,
+                                color: Colors.black,
+                                size: screenWidth < 400 ? 18 : 24,
+                              ),
+                              Text(
+                                " Comments",
+                                style: TextStyle(
+                                  fontSize: screenWidth < 400 ? 12 : 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
-                      Container(
-                        height: 20,
-                        width: 1,
-                        color: Colors.black,
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                      ),
-                      Row(
-                        children: const [
-                          Icon(Icons.star, color: Colors.amber),
-                          Text(" 4.2/5 Reviews",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue)),
-                        ],
-                      ),
-                      Container(
-                        height: 20,
-                        width: 1,
-                        color: Colors.black,
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
-                      ),
-                      Row(
-                        children: const [
-                          Icon(Icons.comment, color: Colors.black),
-                          Text("Comments",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue)),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
                 ),
 
@@ -175,50 +214,65 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          // Action for Compare
-                        },
-                        icon: const Icon(Icons.compare, color: Colors.white),
-                        label: const Text(
-                          "Compare",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.compare,
+                            color: Colors.white,
+                            size: screenWidth < 400 ? 18 : 24,
                           ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 50, vertical: 16),
+                          label: Text(
+                            "Compare",
+                            style: TextStyle(
+                              fontSize: screenWidth < 400 ? 14 : 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth < 400 ? 5 : 20,
+                              vertical: screenWidth < 400 ? 8 : 16,
+                            ),
+                            minimumSize: Size(0, screenWidth < 400 ? 36 : 48),
+                          ),
                         ),
                       ),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          // Action for Brochure Download
-                        },
-                        icon: const Icon(Icons.file_download,
-                            color: Colors.white),
-                        label: const Text(
-                          "Brochure",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.green,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
+                      SizedBox(width: screenWidth < 400 ? 6 : 15),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.file_download,
+                            color: Colors.white,
+                            size: screenWidth < 400 ? 18 : 24,
                           ),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 50, vertical: 16),
+                          label: Text(
+                            "Brochure",
+                            style: TextStyle(
+                              fontSize: screenWidth < 400 ? 14 : 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth < 400 ? 5 : 20,
+                              vertical: screenWidth < 400 ? 8 : 16,
+                            ),
+                            minimumSize: Size(0, screenWidth < 400 ? 36 : 48),
+                          ),
                         ),
                       ),
                     ],
