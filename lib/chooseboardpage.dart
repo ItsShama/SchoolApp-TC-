@@ -4,7 +4,7 @@ import 'package:schoolapp/schooldetailpage.dart';
 class ChooseBoardPage extends StatelessWidget {
   final Map<String, List<String>> boardSchools = {
     "SSC Board": [
-      "St. Xavier's High School, Mumbai dcmmnmdkkkkkkkkkkkkk",
+      "St. Xavier's High School, Mumbai",
       "Don Bosco High School, Matunga",
       "Smt. Sulochanadevi Singhania School, Thane",
       "Bombay Scottish School, Mahim",
