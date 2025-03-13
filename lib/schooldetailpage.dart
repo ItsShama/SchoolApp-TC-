@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 
 class SchoolDetailPage extends StatefulWidget {
   final String schoolName;
+  final String state;
+  final String city;
 
-  const SchoolDetailPage({super.key, required this.schoolName});
+  const SchoolDetailPage(
+      {super.key,
+      required this.schoolName,
+      required this.state,
+      required this.city});
 
   @override
   _SchoolDetailPageState createState() => _SchoolDetailPageState();
@@ -172,7 +178,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                                   size: screenWidth < 400 ? 18 : 24,
                                 ),
                                 Text(
-                                  " Kalkaji, Delhi",
+                                  " ${widget.city}, ${widget.state}",
                                   style: TextStyle(
                                     fontSize: screenWidth < 400 ? 12 : 16,
                                     fontWeight: FontWeight.bold,
@@ -724,7 +730,6 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // School Name
               Text(
                 widget.schoolName,
                 style: const TextStyle(
@@ -734,7 +739,6 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                 ),
               ),
               const SizedBox(height: 10),
-
               const Text(
                 "Admissions for 2025 are currently open for various UG, PG, Diploma, and PhD programs. "
                 "Candidates can apply online through the official admission portal. The selection process "
@@ -742,7 +746,6 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                 style: TextStyle(fontSize: 16, color: Colors.black54),
               ),
               const SizedBox(height: 20),
-
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
@@ -788,7 +791,6 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                 ),
               ),
               const SizedBox(height: 20),
-
               const Text(
                 "Steps to Apply for Admission:",
                 style: TextStyle(
@@ -835,13 +837,14 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
   }
 
   Widget _buildReviewsContent() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+    return Container(
+      width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Card(
             elevation: 4,
+            margin: const EdgeInsets.all(10),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

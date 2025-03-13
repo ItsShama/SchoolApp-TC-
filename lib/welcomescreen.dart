@@ -39,7 +39,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ChooseBoardPage(),
+          builder: (context) => ChooseBoardPage(
+            state: selectedState!,
+            city: selectedCity!,
+          ),
         ),
       );
     } else {
@@ -123,7 +126,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     borderRadius: BorderRadius.circular(25.0),
                   ),
                 ),
-                onPressed: validateAndNavigate, // Check before navigating
+                onPressed: validateAndNavigate,
                 child: const Text("Find",
                     style: TextStyle(color: Colors.white, fontSize: 20)),
               ),
