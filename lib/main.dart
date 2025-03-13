@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:schoolapp/loginpage.dart';
 
-import 'package:schoolapp/welcomescreen.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());

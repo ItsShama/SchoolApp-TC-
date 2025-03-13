@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:schoolapp/loginpage.dart';
+import 'package:schoolapp/welcomescreen.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -89,7 +90,11 @@ class _SignupPageState extends State<SignupPage> {
                       borderRadius: BorderRadius.circular(10)),
                 ),
                 onPressed: () {
-                  // Handle signup logic here
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WelcomeScreen()),
+                  );
                 },
                 child: const Text("Sign Up",
                     style: TextStyle(color: Colors.white, fontSize: 18)),
