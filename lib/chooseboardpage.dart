@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:schoolapp/schooldetailpage.dart';
+import 'package:schoolapp/loginpage.dart';
 
 class ChooseBoardPage extends StatelessWidget {
   final String state;
@@ -83,6 +84,7 @@ class ChooseBoardPage extends StatelessWidget {
                           schoolName: schools[board]![index],
                           state: state,
                           city: city,
+                          schools: schools,
                         );
                       },
                     ),
@@ -101,11 +103,13 @@ class SchoolCard extends StatelessWidget {
   final String schoolName;
   final String state;
   final String city;
+  final Map<String, List<String>> schools;
   const SchoolCard(
       {super.key,
       required this.schoolName,
       required this.state,
-      required this.city});
+      required this.city,
+      required this.schools});
 
   @override
   Widget build(BuildContext context) {
@@ -114,11 +118,30 @@ class SchoolCard extends StatelessWidget {
 
     return InkWell(
       onTap: () {
+        String? selectedBoard;
+
+        for (var board in schools.keys) {
+          if (schools[board]!.contains(schoolName)) {
+            selectedBoard = board;
+            break;
+          }
+        }
+        selectedBoard ??= "Unknown";
+
+        List<String> schoolList = schools[selectedBoard] ?? [];
+
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SchoolDetailPage(
-                    schoolName: schoolName, state: state, city: city)));
+          context,
+          MaterialPageRoute(
+            builder: (context) => SchoolDetailPage(
+              schoolName: schoolName,
+              state: state,
+              city: city,
+              board: selectedBoard!,
+              schoolList: schoolList,
+            ),
+          ),
+        );
       },
       child: Container(
         margin: const EdgeInsets.all(10),
@@ -225,13 +248,25 @@ class SchoolCard extends StatelessWidget {
                 children: [
                   const Spacer(),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
+                      );
+                    },
                     icon: const Icon(Icons.save_alt),
                   ),
                   Wrap(
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           padding: const EdgeInsets.symmetric(horizontal: 12),

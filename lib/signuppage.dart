@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:schoolapp/loginpage.dart';
 import 'package:schoolapp/welcomescreen.dart';
+import 'package:schoolapp/chooseboardpage.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});

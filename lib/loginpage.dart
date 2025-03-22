@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:schoolapp/dashboard.dart';
 import 'package:schoolapp/signuppage.dart';
 import 'package:schoolapp/welcomescreen.dart';
+import 'package:schoolapp/emailverification.dart';
+import 'package:schoolapp/googleauthservice.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,6 +15,51 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final GoogleAuthService _googleAuthService = GoogleAuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  void _checkLoginStatus() async {
+    await Future.delayed(
+        Duration(seconds: 1)); // Give time for SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? token = prefs.getString("auth_token");
+
+    if (token != null) {
+      // Navigate to Dashboard
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboard()),
+      );
+    }
+  }
+
+  void _handleGoogleLogin() async {
+    String? token = await _googleAuthService.signInWithGoogle();
+
+    if (token != null) {
+      // If login is successful, navigate to Dashboard
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboard()),
+      );
+
+      print(" login suceccful");
+    } else {
+      // Show error if login failed
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Google login failed! Try again."),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordVisible = false;
@@ -20,10 +69,7 @@ class _LoginPageState extends State<LoginPage> {
     String password = passwordController.text.trim();
 
     if (email.isNotEmpty && password.isNotEmpty) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const WelcomeScreen()),
-      );
+      Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -83,6 +129,27 @@ class _LoginPageState extends State<LoginPage> {
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
+            const SizedBox(height: 10),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EmailVerification()),
+                  );
+                },
+                child: const Text(
+                  "Forgot Password ?",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 25),
             SizedBox(
               width: double.infinity,
@@ -121,6 +188,61 @@ class _LoginPageState extends State<LoginPage> {
                         },
                     ),
                   ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: Divider(
+                    thickness: 1,
+                    color: Colors.grey[400],
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    "OR",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey),
+                  ),
+                ),
+                Expanded(
+                  child: Divider(
+                    thickness: 1,
+                    color: Colors.grey[400],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    side: const BorderSide(color: Colors.grey),
+                  ),
+                  elevation: 2,
+                ),
+                onPressed: _handleGoogleLogin,
+                icon: Image.asset(
+                  'assets/gmail-logo.jpg',
+                  height: 43,
+                  width: 43,
+                ),
+                label: const Text(
+                  "Log in with Gmail",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),

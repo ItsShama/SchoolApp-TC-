@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:schoolapp/compareschools.dart';
+import 'package:schoolapp/loginpage.dart';
 
 class SchoolDetailPage extends StatefulWidget {
   final String schoolName;
   final String state;
   final String city;
+  final String board;
+  final List<String> schoolList;
+  final String? selectedSchool;
 
-  const SchoolDetailPage(
-      {super.key,
-      required this.schoolName,
-      required this.state,
-      required this.city});
+  const SchoolDetailPage({
+    super.key,
+    required this.schoolName,
+    required this.state,
+    required this.city,
+    required this.board,
+    required this.schoolList,
+    this.selectedSchool,
+  });
 
   @override
   _SchoolDetailPageState createState() => _SchoolDetailPageState();
@@ -19,11 +28,13 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   Map<int, bool> _isExpandedMap = {};
+  String? selectedSchool;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 6, vsync: this);
+    selectedSchool = widget.selectedSchool;
+    _tabController = TabController(length: 7, vsync: this);
 
     _tabController.addListener(() {
       setState(() {
@@ -90,6 +101,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
           "Student Placement Records",
           "Alumni Success Stories"
         ];
+
       default:
         return [];
     }
@@ -200,35 +212,17 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                                   color: Colors.amber,
                                   size: screenWidth < 400 ? 18 : 24,
                                 ),
-                                Text(
-                                  " 4.2/5 Reviews",
-                                  style: TextStyle(
-                                    fontSize: screenWidth < 400 ? 12 : 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              height: 20,
-                              width: 1,
-                              color: Colors.black,
-                              margin: const EdgeInsets.symmetric(horizontal: 8),
-                            ),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.comment,
-                                  color: Colors.black,
-                                  size: screenWidth < 400 ? 18 : 24,
-                                ),
-                                Text(
-                                  " Comments",
-                                  style: TextStyle(
-                                    fontSize: screenWidth < 400 ? 12 : 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
+                                GestureDetector(
+                                  onTap: () {
+                                    _tabController.animateTo(1);
+                                  },
+                                  child: Text(
+                                    " 4.6/5 Reviews",
+                                    style: TextStyle(
+                                      fontSize: screenWidth < 400 ? 12 : 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -287,7 +281,18 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                       children: [
                         Expanded(
                           child: ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => CompareSchools(
+                                  selectedBoard: widget.board,
+                                  schoolList: widget.schoolList,
+                                  onSchoolSelected: (selectedSchool) {
+                                    _tabController.animateTo(6);
+                                  },
+                                ),
+                              );
+                            },
                             icon: Icon(
                               Icons.compare,
                               color: Colors.white,
@@ -317,7 +322,13 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                         SizedBox(width: screenWidth < 400 ? 6 : 15),
                         Expanded(
                           child: ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginPage()),
+                              );
+                            },
                             icon: Icon(
                               Icons.file_download,
                               color: Colors.white,
@@ -363,6 +374,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                       Tab(icon: Icon(Icons.school), text: "Admissions"),
                       Tab(icon: Icon(Icons.business), text: "Faculty"),
                       Tab(icon: Icon(Icons.bar_chart), text: "Ranking"),
+                      Tab(icon: Icon(Icons.compare), text: "Compare"),
                     ],
                   ),
                 ],
@@ -372,7 +384,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
               height: MediaQuery.of(context).size.height * 0.7,
               child: TabBarView(
                 controller: _tabController,
-                children: List.generate(6, (index) {
+                children: List.generate(7, (index) {
                   return _buildTabContent(_getTabContentItems());
                 }),
               ),
@@ -388,67 +400,69 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
     return SingleChildScrollView(
       child: Column(
         children: [
-          Card(
-            margin: const EdgeInsets.all(10),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        _isExpandedMap[_selectedTabIndex] = !(isExpanded);
-                      });
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Table of Content",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+          if (_selectedTabIndex != 6)
+            Card(
+              margin: const EdgeInsets.all(10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              elevation: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _isExpandedMap[_selectedTabIndex] = !(isExpanded);
+                        });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Table of Content",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Icon(
+                            isExpanded
+                                ? Icons.keyboard_arrow_up
+                                : Icons.keyboard_arrow_down,
+                            size: 24,
                             color: Colors.black,
                           ),
-                        ),
-                        Icon(
-                          isExpanded
-                              ? Icons.keyboard_arrow_up
-                              : Icons.keyboard_arrow_down,
-                          size: 24,
-                          color: Colors.black,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  AnimatedCrossFade(
-                    duration: const Duration(milliseconds: 300),
-                    firstChild: Container(),
-                    secondChild: Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        ...items.map((item) => _buildListItem(item)).toList(),
-                      ],
+                    AnimatedCrossFade(
+                      duration: const Duration(milliseconds: 300),
+                      firstChild: Container(),
+                      secondChild: Column(
+                        children: [
+                          const SizedBox(height: 10),
+                          ...items.map((item) => _buildListItem(item)).toList(),
+                        ],
+                      ),
+                      crossFadeState: isExpanded
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
                     ),
-                    crossFadeState: isExpanded
-                        ? CrossFadeState.showSecond
-                        : CrossFadeState.showFirst,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
           if (_selectedTabIndex == 0) _buildSchoolInfoContent(),
+          if (_selectedTabIndex == 1) _buildReviewsContent(),
+          if (_selectedTabIndex == 3) _buildAdmissionContent(),
           if (_selectedTabIndex == 2) _buildFeesContent(),
           if (_selectedTabIndex == 4) _buildFacultyContent(),
           if (_selectedTabIndex == 5) _buildRankingContent(),
-          if (_selectedTabIndex == 3) _buildAdmissionContent(),
-          if (_selectedTabIndex == 1) _buildReviewsContent()
+          if (_selectedTabIndex == 6) _buildCompareContent(),
         ],
       ),
     );
@@ -949,6 +963,142 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCompareContent() {
+    return Container(
+      width: double.infinity,
+      child: Card(
+        margin: const EdgeInsets.all(10),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 100,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          widget.schoolName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(6),
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Text(
+                      "VS",
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return CompareSchools(
+                                  selectedBoard: widget.board,
+                                  schoolList: widget.schoolList,
+                                  onSchoolSelected: (selected) {
+                                    setState(() {
+                                      selectedSchool = selected;
+                                    });
+                                  },
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            height: 100,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: selectedSchool == null
+                                  ? const Icon(Icons.add,
+                                      size: 28, color: Colors.grey)
+                                  : null,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          selectedSchool ?? "Select School",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: 140,
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  ),
+                  child: const Text(
+                    "Compare",
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
