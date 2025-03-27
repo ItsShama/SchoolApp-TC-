@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:schoolapp/loginpage.dart';
+import 'package:schoolapp/signuppage.dart';
 import 'package:schoolapp/welcomescreen.dart';
 
 void main() async {
@@ -11,6 +13,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false, home: WelcomeScreen());
+        debugShowCheckedModeBanner: false, home: SignupPage());
   }
 }

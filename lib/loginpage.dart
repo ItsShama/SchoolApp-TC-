@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:schoolapp/dashboard.dart';
 import 'package:schoolapp/signuppage.dart';
-import 'package:schoolapp/welcomescreen.dart';
 import 'package:schoolapp/emailverification.dart';
-import 'package:schoolapp/googleauthservice.dart';
+import 'package:schoolapp/welcomescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dashboard.dart';
+import 'dart:convert';
+import 'google_signin_api.dart';
+import 'package:schoolapp/mobilenoauth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,50 +20,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final GoogleAuthService _googleAuthService = GoogleAuthService();
-
-  @override
-  void initState() {
-    super.initState();
-    _checkLoginStatus();
-  }
-
-  void _checkLoginStatus() async {
-    await Future.delayed(
-        Duration(seconds: 1)); // Give time for SharedPreferences
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString("auth_token");
-
-    if (token != null) {
-      // Navigate to Dashboard
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
-      );
-    }
-  }
-
-  void _handleGoogleLogin() async {
-    String? token = await _googleAuthService.signInWithGoogle();
-
-    if (token != null) {
-      // If login is successful, navigate to Dashboard
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
-      );
-
-      print(" login suceccful");
-    } else {
-      // Show error if login failed
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Google login failed! Try again."),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
+  final GoogleSignInApi _googleAuthService = GoogleSignInApi();
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -69,7 +31,9 @@ class _LoginPageState extends State<LoginPage> {
     String password = passwordController.text.trim();
 
     if (email.isNotEmpty && password.isNotEmpty) {
-      Navigator.pop(context);
+      Navigator.pushReplacement(context, MaterialPageRoute (
+          builder: (context) => const WelcomeScreen()),
+    );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -90,6 +54,20 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Center(
+                child: RichText(
+                    text: TextSpan(
+                        text: "Log In",
+                        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)))),
+
+            const SizedBox(height: 10),
+            Center(
+                child: RichText(
+                    text: TextSpan(
+                        text: "Login here to continue to app",
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w100)))),
+
+            const SizedBox(height: 50),
             const Text(
               "Email",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -98,10 +76,8 @@ class _LoginPageState extends State<LoginPage> {
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                hintText: "Enter your email",
-                prefixIcon: const Icon(Icons.email),
                 border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                OutlineInputBorder(borderRadius: BorderRadius.circular(2)),
               ),
             ),
             const SizedBox(height: 15),
@@ -113,8 +89,6 @@ class _LoginPageState extends State<LoginPage> {
               controller: passwordController,
               obscureText: !isPasswordVisible,
               decoration: InputDecoration(
-                hintText: "Enter your password",
-                prefixIcon: const Icon(Icons.lock),
                 suffixIcon: IconButton(
                   icon: Icon(
                     isPasswordVisible ? Icons.visibility : Icons.visibility_off,
@@ -126,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
                 border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                OutlineInputBorder(borderRadius: BorderRadius.circular(2)),
               ),
             ),
             const SizedBox(height: 10),
@@ -144,8 +118,9 @@ class _LoginPageState extends State<LoginPage> {
                   "Forgot Password ?",
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w100,
+                    decoration: TextDecoration.underline
                   ),
                 ),
               ),
@@ -156,9 +131,9 @@ class _LoginPageState extends State<LoginPage> {
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
+                  backgroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(2)),
                 ),
                 onPressed: _handleLogin,
                 child: const Text("Login",
@@ -166,6 +141,72 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             const SizedBox(height: 20),
+
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(2),
+                    side: const BorderSide(color: Colors.black),
+                  ),
+                  elevation: 2,
+                ),
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>  Mobilenoauth()),
+                  );
+
+                },
+                icon: Image.asset(
+                  'assets/gmail-logo.jpg',
+                  height: 43,
+                  width: 43,
+                ),
+                label: const Text(
+                  "Log in with Mobile Number",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            SizedBox(height: 10,),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(2),
+                    side: const BorderSide(color: Colors.black),
+                  ),
+                  elevation: 2,
+                ),
+                onPressed: () async {
+                  await signIn(); // Calling signIn method properly with async
+                },
+                icon: Image.asset(
+                  'assets/gmail-logo.jpg',
+                  height: 43,
+                  width: 43,
+                ),
+                label: const Text(
+                  "Log in with Gmail",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            SizedBox(height: 25),
             Center(
               child: RichText(
                 text: TextSpan(
@@ -191,64 +232,57 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: Divider(
-                    thickness: 1,
-                    color: Colors.grey[400],
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    "OR",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey),
-                  ),
-                ),
-                Expanded(
-                  child: Divider(
-                    thickness: 1,
-                    color: Colors.grey[400],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: const BorderSide(color: Colors.grey),
-                  ),
-                  elevation: 2,
-                ),
-                onPressed: _handleGoogleLogin,
-                icon: Image.asset(
-                  'assets/gmail-logo.jpg',
-                  height: 43,
-                  width: 43,
-                ),
-                label: const Text(
-                  "Log in with Gmail",
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
           ],
         ),
       ),
     );
   }
+  Future signIn() async {
+    final user = await GoogleSignInApi.login();
+
+    if (user == null) {
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signin Failed")));
+      print("failed");
+    } else {
+      // Get the email from the signed-in user
+      final String email = user.email;
+
+      // Send the email to the backend to check if it's already in the database
+      final response = await http.post(
+        Uri.parse("http://localhost:4000/auth/check-email"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email}),
+      );
+
+      if (response.statusCode == 200) {
+        print("Successful");
+        final data = jsonDecode(response.body);
+
+        // Check the backend response to see if the user should be redirected
+        if (data['redirect']) {
+          // If redirect is true, it means the user does not exist
+          print("Redirecting to Dashboard (new user)");
+
+          // Navigate to the Dashboard page for new user
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => Dashboard(user: user)) // Replace with actual Dashboard page
+          );
+        } else {
+          // If redirect is false, it means the user already exists
+          print("User already exists, redirecting to another page");
+
+          // Redirect to a different screen (e.g., Profile or Welcome page for existing users)
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => WelcomeScreen()) // Replace with your desired page
+          );
+        }
+      } else {
+        // If the server returns an error
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Error checking user"))
+        );
+      }
+    }   }
+
 }
