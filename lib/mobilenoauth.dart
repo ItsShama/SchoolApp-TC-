@@ -16,10 +16,12 @@ class _MobilenoauthState extends State<Mobilenoauth> {
       String? sessionId = await ApiService.sendOtp(phone);
       if (sessionId != null) {
         // Navigate to OTP Screen with session ID
+        var fullName;
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => OtpScreen(phone: phone, sessionId: sessionId),
+            builder: (context) => OtpScreen(
+                phone: phone, sessionId: sessionId, fullName: fullName),
           ),
         );
       } else {

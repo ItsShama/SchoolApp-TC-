@@ -83,8 +83,8 @@ class _CompareSchoolsState extends State<CompareSchools> {
                     setState(() {
                       filteredSchools = widget.schoolList
                           .where((school) => school
-                              .toLowerCase()
-                              .contains(query.toLowerCase()))
+                          .toLowerCase()
+                          .contains(query.toLowerCase()))
                           .toList();
                     });
                   },
@@ -134,9 +134,9 @@ class _CompareSchoolsState extends State<CompareSchools> {
                   onPressed: selectedSchool == null
                       ? null
                       : () {
-                          widget.onSchoolSelected(selectedSchool!);
-                          Navigator.pop(context);
-                        },
+                    widget.onSchoolSelected(selectedSchool!);
+                    Navigator.pop(context);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,
                     foregroundColor: Colors.white,

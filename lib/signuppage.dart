@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:schoolapp/loginpage.dart';
 import 'package:schoolapp/welcomescreen.dart';
+import 'package:schoolapp/mobilesignup.dart';
 import 'package:schoolapp/chooseboardpage.dart';
 import 'package:http/http.dart' as http;
 import 'dashboard.dart';
@@ -120,7 +121,7 @@ class _SignupPageState extends State<SignupPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const WelcomeScreen()),
+                        builder: (context) => MobileSignup()),
                   );
                 },
                 child: const Text("Sign up with Mobile Number",
@@ -220,7 +221,7 @@ class _SignupPageState extends State<SignupPage> {
 
           // Navigate to the Dashboard page for new user
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => Dashboard(user: user)) // Replace with actual Dashboard page
+              MaterialPageRoute(builder: (context) => Dashboard()) // Replace with actual Dashboard page
           );
         } else {
           // If redirect is false, it means the user already exists

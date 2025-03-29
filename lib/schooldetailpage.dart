@@ -174,7 +174,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
 
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: FittedBox(
@@ -275,7 +275,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                   // Compare & Brochure Buttons
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -284,13 +284,18 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                             onPressed: () {
                               showDialog(
                                 context: context,
-                                builder: (context) => CompareSchools(
-                                  selectedBoard: widget.board,
-                                  schoolList: widget.schoolList,
-                                  onSchoolSelected: (selectedSchool) {
-                                    _tabController.animateTo(6);
-                                  },
-                                ),
+                                builder: (context) {
+                                  return CompareSchools(
+                                    selectedBoard: widget.board,
+                                    schoolList: widget.schoolList,
+                                    onSchoolSelected: (selected) {
+                                      setState(() {
+                                        selectedSchool = selected;
+                                        _tabController.animateTo(6);
+                                      });
+                                    },
+                                  );
+                                },
                               );
                             },
                             icon: Icon(
@@ -538,7 +543,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
               const SizedBox(height: 10),
               const Text(
                 "The fee structure is designed to cover various components, including tuition fees, hostel fees, mess charges, etc. "
-                "Fees may vary depending on the programme and the institute's specifications.",
+                    "Fees may vary depending on the programme and the institute's specifications.",
                 style: TextStyle(fontSize: 16, color: Colors.black54),
               ),
               const SizedBox(height: 20),
@@ -550,7 +555,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                     width: 0.5,
                   ),
                   headingRowColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.grey[200]!,
+                        (states) => Colors.grey[200]!,
                   ),
                   columns: const [
                     DataColumn(
@@ -620,7 +625,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                     width: 1,
                   ),
                   headingRowColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.grey[200]!,
+                        (states) => Colors.grey[200]!,
                   ),
                   columns: const [
                     DataColumn(
@@ -692,7 +697,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                     width: 1,
                   ),
                   headingRowColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.grey[200]!,
+                        (states) => Colors.grey[200]!,
                   ),
                   columns: const [
                     DataColumn(
@@ -755,8 +760,8 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
               const SizedBox(height: 10),
               const Text(
                 "Admissions for 2025 are currently open for various UG, PG, Diploma, and PhD programs. "
-                "Candidates can apply online through the official admission portal. The selection process "
-                "is based on academic performance and entrance test scores (if applicable).",
+                    "Candidates can apply online through the official admission portal. The selection process "
+                    "is based on academic performance and entrance test scores (if applicable).",
                 style: TextStyle(fontSize: 16, color: Colors.black54),
               ),
               const SizedBox(height: 20),
@@ -768,7 +773,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                     width: 1,
                   ),
                   headingRowColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.grey[200]!,
+                        (states) => Colors.grey[200]!,
                   ),
                   columns: const [
                     DataColumn(
@@ -1049,7 +1054,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage>
                             child: Center(
                               child: selectedSchool == null
                                   ? const Icon(Icons.add,
-                                      size: 28, color: Colors.grey)
+                                  size: 28, color: Colors.grey)
                                   : null,
                             ),
                           ),

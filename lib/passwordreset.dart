@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:schoolapp/loginpage.dart';
+import 'package:schoolapp/chooseboardpage.dart';
+import 'chooseboardpage.dart';
 
 class PasswordResetPage extends StatefulWidget {
   const PasswordResetPage({super.key});
@@ -11,7 +12,7 @@ class PasswordResetPage extends StatefulWidget {
 class _PasswordResetPageState extends State<PasswordResetPage> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-      TextEditingController();
+  TextEditingController();
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
 
@@ -51,7 +52,12 @@ class _PasswordResetPageState extends State<PasswordResetPage> {
 
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const LoginPage()));
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChooseBoardPage(
+                state: '',
+                city: '',
+              )));
     });
   }
 

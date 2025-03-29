@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:schoolapp/dashboard.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'apiservice.dart';
 import 'chooseboardpage.dart';
 import 'dart:async';
@@ -8,7 +10,9 @@ import 'dart:async';
 class OtpScreen extends StatefulWidget {
   final String phone;
   String sessionId;
-  OtpScreen({required this.phone, required this.sessionId});
+  String fullName;
+  OtpScreen(
+      {required this.phone, required this.sessionId, required this.fullName});
 
   @override
   _OtpScreenState createState() => _OtpScreenState();
@@ -87,23 +91,29 @@ class _OtpScreenState extends State<OtpScreen> with CodeAutoFill {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("OTP Verified Successfully!")));
 
-        Future.delayed(Duration(seconds: 1), () {
+        var response =
+        await ApiService.sendUserData(widget.fullName, widget.phone);
+
+        print("API Response: $response");
+
+        if (response != null && response.containsKey('token')) {
+          String token = response['token'];
+
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('token', token);
+
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-                builder: (context) => ChooseBoardPage(
-                  state: '',
-                  city: '',
-                )),
+            MaterialPageRoute(builder: (context) => Dashboard()),
           );
-        });
+        }
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Invalid OTP. Try again.")));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Please enter a valid 4-digit OTP")));
+          SnackBar(content: Text("Please enter a valid 6-digit OTP")));
     }
   }
 

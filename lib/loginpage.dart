@@ -266,7 +266,7 @@ class _LoginPageState extends State<LoginPage> {
 
           // Navigate to the Dashboard page for new user
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => Dashboard(user: user)) // Replace with actual Dashboard page
+              MaterialPageRoute(builder: (context) => Dashboard()) // Replace with actual Dashboard page
           );
         } else {
           // If redirect is false, it means the user already exists

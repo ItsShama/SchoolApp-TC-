@@ -41,7 +41,8 @@ class ChooseBoardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double listViewHeight = screenHeight < 400 ? 180 : 250;
+    double listViewHeight =
+    screenHeight < 400 ? screenHeight * 0.30 : screenHeight * 0.55;
 
     return Scaffold(
       appBar: AppBar(
@@ -54,7 +55,7 @@ class ChooseBoardPage extends StatelessWidget {
         actions: [
           IconButton(
             icon:
-                const Icon(Icons.account_circle, size: 28, color: Colors.white),
+            const Icon(Icons.account_circle, size: 28, color: Colors.white),
             onPressed: () {},
           ),
         ],
@@ -104,22 +105,26 @@ class SchoolCard extends StatelessWidget {
   final String state;
   final String city;
   final Map<String, List<String>> schools;
-  const SchoolCard(
-      {super.key,
-      required this.schoolName,
-      required this.state,
-      required this.city,
-      required this.schools});
+
+  const SchoolCard({
+    super.key,
+    required this.schoolName,
+    required this.state,
+    required this.city,
+    required this.schools,
+  });
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double cardWidth = screenWidth * 0.8;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double listViewHeight =
+    screenHeight < 400 ? screenHeight * 0.30 : screenHeight * 0.55;
 
     return InkWell(
       onTap: () {
         String? selectedBoard;
-
         for (var board in schools.keys) {
           if (schools[board]!.contains(schoolName)) {
             selectedBoard = board;
@@ -127,9 +132,7 @@ class SchoolCard extends StatelessWidget {
           }
         }
         selectedBoard ??= "Unknown";
-
         List<String> schoolList = schools[selectedBoard] ?? [];
-
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -148,118 +151,125 @@ class SchoolCard extends StatelessWidget {
         width: cardWidth,
         decoration: BoxDecoration(
           color: Colors.white,
-          boxShadow: [BoxShadow(blurRadius: 1.5, color: Colors.grey.shade400)],
           borderRadius: BorderRadius.circular(15),
+          boxShadow: [BoxShadow(blurRadius: 4, color: Colors.grey.shade300)],
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text(
-                      schoolName,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: screenWidth < 400 ? 14 : 20,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Container(
+                  height: 150,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15),
                     ),
                   ),
-                  Container(
-                    height: 35,
-                    width: 35,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(6.5),
-                    ),
-                    child: Icon(Icons.school,
-                        color: Colors.black, size: screenWidth < 400 ? 18 : 26),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.location_on,
-                    size: 16,
-                    color: Colors.black,
-                  ),
-                  const SizedBox(width: 5),
-                  Expanded(
-                    child: Text(
-                      " $city, $state",
-                      style: TextStyle(
-                          fontSize: screenWidth < 400 ? 16 : 15,
-                          color: Colors.blue),
-                    ),
-                  ),
-                ],
-              ),
-              const Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Courses Offered",
-                          style: TextStyle(
-                              fontSize: 13, color: Colors.grey.shade700),
-                        ),
-                        Text(
-                          "Multiple Courses",
-                          style: TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Fees Range",
-                          style: TextStyle(
-                              fontSize: 13, color: Colors.grey.shade700),
-                        ),
-                        Text(
-                          "1 L - 10 L",
-                          style: TextStyle(
-                              fontSize: 13, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Spacer(),
-                  IconButton(
-                    onPressed: () {
+                  child: const Icon(Icons.image, size: 50, color: Colors.white),
+                ),
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: InkWell(
+                    onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const LoginPage()),
                       );
                     },
-                    icon: const Icon(Icons.save_alt),
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.bookmark_border, color: Colors.black),
+                    ),
                   ),
-                  Wrap(
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    schoolName,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: screenWidth < 400 ? 14 : 18,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
                     children: [
-                      ElevatedButton(
+                      // Ranking before stars
+                      Text("Ranking: #5",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: Colors.black)),
+                      const SizedBox(width: 8),
+                      // Stars
+                      Row(
+                        children: List.generate(5, (index) {
+                          return const Icon(Icons.star,
+                              color: Colors.amber, size: 16);
+                        }),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Classes: Pre-Nursery - Class 10",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
+                          Text("Multiple Courses",
+                              style:
+                              TextStyle(color: Colors.grey, fontSize: 12)),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Fees Range",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black)),
+                          Text("1 L - 10 L", style: TextStyle(fontSize: 12)),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on,
+                          size: 16, color: Colors.black),
+                      const SizedBox(width: 5),
+                      Text("$city, $state",
+                          style: TextStyle(color: Colors.blue)),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ElevatedButton.icon(
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -269,20 +279,27 @@ class SchoolCard extends StatelessWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          minimumSize: const Size(180, 45),
                         ),
-                        child: const Text(
-                          "Brochure",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
+                        icon: const Icon(Icons.download,
+                            color: Colors.white, size: 22),
+                        label: const Text("Brochure",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14)),
                       ),
                     ],
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
